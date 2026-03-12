@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../services/graphql_service.dart';
-import '../widgets/movie_card.dart';
 
 class GraphQLMoviesScreen extends StatefulWidget {
   const GraphQLMoviesScreen({super.key});
@@ -52,18 +51,7 @@ class _GraphQLMoviesScreenState extends State<GraphQLMoviesScreen> {
 
           final data = snapshot.data!;
 
-          return GridView.builder(
-
-            padding: const EdgeInsets.all(10),
-
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 0.7,
-
-            ),
+          return ListView.builder(
 
             itemCount: data.length,
 
@@ -71,14 +59,105 @@ class _GraphQLMoviesScreenState extends State<GraphQLMoviesScreen> {
 
               final movie = data[index];
 
-              return MovieCard(
+              double rating = ((index % 5) + 6).toDouble();
 
-                title: movie['title'] ?? "Sin título",
+              return Card(
 
-                poster:
-                    "https://image.tmdb.org/t/p/w500${movie['poster_path']}",
+                color: Colors.grey[900],
 
-                rating: (movie['vote_average'] ?? 0).toDouble(),
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+
+                elevation: 6,
+
+                child: Padding(
+
+                  padding: const EdgeInsets.all(10),
+
+                  child: Row(
+
+                    children: [
+
+                      ClipRRect(
+
+                        borderRadius: BorderRadius.circular(10),
+
+                        child: Image.network(
+
+                          "https://picsum.photos/200/300?random=$index",
+
+                          width: 100,
+                          height: 150,
+                          fit: BoxFit.cover,
+
+                        ),
+                      ),
+
+                      const SizedBox(width: 15),
+
+                      Expanded(
+
+                        child: Column(
+
+                          crossAxisAlignment: CrossAxisAlignment.start,
+
+                          children: [
+
+                            Text(
+                              movie['title'],
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            const SizedBox(height: 8),
+
+                            Text(
+                              movie['body'],
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white70,
+                              ),
+                            ),
+
+                            const SizedBox(height: 10),
+
+                            Row(
+                              children: [
+
+                                const Icon(
+                                  Icons.star,
+                                  color: Colors.orange,
+                                ),
+
+                                const SizedBox(width: 5),
+
+                                Text(
+                                  rating.toString(),
+                                  style: const TextStyle(
+                                    color: Colors.orange,
+                                  ),
+                                ),
+
+                              ],
+                            )
+
+                          ],
+                        ),
+                      )
+
+                    ],
+                  ),
+                ),
               );
             },
           );

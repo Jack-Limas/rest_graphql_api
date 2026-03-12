@@ -2,23 +2,25 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class GraphQLService {
 
-  static HttpLink httpLink = HttpLink(
-    'https://tmdb.apps.quintero.io/',
+  static final HttpLink httpLink = HttpLink(
+    'https://graphqlzero.almansi.me/api',
   );
 
-  static GraphQLClient client = GraphQLClient(
+  static final GraphQLClient client = GraphQLClient(
     link: httpLink,
     cache: GraphQLCache(),
   );
 
   static Future<List> fetchMovies() async {
 
-    const query = """
+    const String query = """
     query {
-      movies {
-        title
-        poster_path
-        vote_average
+      posts(options: {paginate: {page: 1, limit: 20}}) {
+        data {
+          id
+          title
+          body
+        }
       }
     }
     """;
@@ -31,6 +33,6 @@ class GraphQLService {
       throw Exception(result.exception.toString());
     }
 
-    return result.data?['movies'];
+    return result.data?['posts']['data'];
   }
 }
